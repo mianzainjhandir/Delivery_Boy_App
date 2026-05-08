@@ -33,7 +33,7 @@
         <!-- Google Maps API Key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyC4424384uEb_hWiquCT4sj9LFa2z-xDak" />
+            android:value="AIzaSyCX3NSZX9_jZkrui_0clz-GuodGtgKKRW0" />
     </application>
     <!-- Location Permissions -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

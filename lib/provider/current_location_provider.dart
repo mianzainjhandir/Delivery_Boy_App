@@ -45,9 +45,24 @@ class CurrentLocationProvider extends ChangeNotifier {
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high
       );
+      //Success - update location and clear loading state and error message
+      _currentLocation = LatLng(position.latitude, position.longitude);
+      _isLoading = false;
+      _errorMessage = " ";
+      notifyListeners();
     } catch (e){
+      //handle any errors that occur during location retrieval
+      _errorMessage = "Failed to get location: ${e.toString()}. Use default location.";
+      _isLoading = false;
+      notifyListeners();
       print(e.toString());
     }
   }
 
+  //Public method to manually refresh location
+  Future<void> refreshLocation() async {
+    _isLoading = true;
+    notifyListeners();
+    await getCurrentLocation();
+  }
 }

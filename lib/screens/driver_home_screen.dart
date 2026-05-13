@@ -1,7 +1,6 @@
 import 'package:delivery_boy_app/provider/current_location_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 class DriverHomeScreen extends StatefulWidget {
@@ -18,71 +17,163 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
-  //create Marks for current location
+
+  // Create marker for current location
   Set<Marker> _buildMarkers(LatLng currentLocation) {
     return {
       Marker(
-        markerId: MarkerId('current_location'),
+        markerId: const MarkerId('current_location'),
         position: currentLocation,
-        infoWindow: InfoWindow(
-            title: ' Current Location',
-          snippet: "You are here"
+        infoWindow: const InfoWindow(
+          title: 'Current Location',
+          snippet: "You are here",
         ),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        icon: BitmapDescriptor.defaultMarkerWithHue(
+          BitmapDescriptor.hueRed,
+        ),
       ),
     };
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<CurrentLocationProvider>(builder: (context, locationProvider, chiild){
-        //show loading indicator while fetching location
-        if(locationProvider.isLoading){
-          return Center(
-            child: Column(
-              children: [
-                CircularProgressIndicator(),
-                SizedBox(height: 15,),
-                Text("Getting your location..."),
-              ],
-            ),
-          );
-        }
-        //show error message if location retrieval failed
-        if(locationProvider.errorMessage.trim().isNotEmpty){
-          WidgetsBinding.instance.addPersistentFrameCallback((_) {
-            showAppSnackbar (
-                context : context,
-                type: SnackBarType.error,
-              discripton: locationProvider.errorMessage,
+      body: Consumer<CurrentLocationProvider>(
+        builder: (context, locationProvider, child) {
+
+          // Show loading indicator while fetching location
+          if (locationProvider.isLoading) {
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 15),
+                  Text("Getting your location..."),
+                ],
+              ),
             );
-          });
-        }
-        Size size = MediaQuery.of(context).size;
-        return Stack(
-          children: [
-            GoogleMap(
-              onMapCreated: _onMapCreated,
-              markers: _buildMarkers(locationProvider.currentLocation),
-                initialCameraPosition: CameraPosition(
-                    target: locationProvider.currentLocation,
-                    zoom: 15
+          }
+
+          // Show error message if location retrieval failed
+          if (locationProvider.errorMessage.trim().isNotEmpty) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(locationProvider.errorMessage),
+                  backgroundColor: Colors.red,
                 ),
-              myLocationEnabled: true,
-              myLocationButtonEnabled: false,
-              mapType: MapType.normal,
-            ),
-            if(locationProvider.errorMessage.isEmpty)
-            Align(alignment: Alignment.bottomCenter,
-            child: Padding(
-                padding: EdgeInsets.all(15),
-            ),)
-          ],
-        );
-      })
+              );
+            });
+          }
+
+          Size size = MediaQuery.of(context).size;
+
+          return Stack(
+            children: [
+
+              // Google Map
+              GoogleMap(
+                onMapCreated: _onMapCreated,
+                markers:
+                _buildMarkers(locationProvider.currentLocation),
+
+                initialCameraPosition: CameraPosition(
+                  target: locationProvider.currentLocation,
+                  zoom: 15,
+                ),
+
+                myLocationEnabled: true,
+                myLocationButtonEnabled: false,
+                mapType: MapType.normal,
+              ),
+
+              // Bottom Text
+              if (locationProvider.errorMessage.isEmpty)
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Text(
+                        "Hello",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+              // Online Button UI
+              Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  height: size.height * 0.12,
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Center(
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          width: 200,
+                          height: 38,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            border: Border.all(
+                              color: Colors.red,
+                              width: 2,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Row(
+                              children: [
+
+                                // Online Button
+                                Expanded(
+                                  flex: 2,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius:
+                                      BorderRadius.circular(30),
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: const Text(
+                                      "Online",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                                const Expanded(
+                                  child: SizedBox(),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
-
 }

@@ -90,27 +90,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
 
               // Bottom Text
               if (locationProvider.errorMessage.isEmpty)
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Text(
-                        "Hello",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
               // Online Button UI
               Align(
                 alignment: Alignment.topCenter,

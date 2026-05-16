@@ -54,6 +54,35 @@ class OrderCard extends StatelessWidget {
               ],
             ),
 
+          ),
+          Padding(padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Material(
+                color: Colors.white,
+                elevation: 1,
+                shadowColor: Colors.black26,
+                child: Row(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.brown[100],
+                        borderRadius: BorderRadius.circular(8),
+                        image: DecorationImage(
+                            image: NetworkImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRY1yjOaz-ncmlmm6Dqr1jg45dlJ4rbwut66Q&s'),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10,),
+
+                  ],
+                ),
+              )
+            ],
+          ),
           )
         ],
       ),

@@ -1,6 +1,8 @@
 
 
 import 'package:delivery_boy_app/utills/colors.dart';
+import 'package:delivery_boy_app/widgets/custom_button.dart';
+import 'package:delivery_boy_app/widgets/dash_vertical.dart';
 import 'package:flutter/material.dart';
 
 class OrderCard extends StatelessWidget {
@@ -77,9 +79,68 @@ class OrderCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 10,),
-
+                    Text.rich(
+                        TextSpan(
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500
+                            ),
+                          children: [
+                            TextSpan(text: "Tender Coconut (Normal)"),
+                            TextSpan(
+                                text: " * 4",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                 )
+                            )
+                          ]
+                        ),
+                    ),
                   ],
                 ),
+              ),
+              SizedBox(height: 20,),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    children: [
+                      Icon(Icons.radio_button_checked, color: Colors.black,size: 20,),
+                      SizedBox(height: 35, child: DashVerticalLine(dashHeight: 6, dashGap: 5,),),
+
+                    ],
+                  ),
+                  SizedBox(width: 4,),
+                  pickupAndDileveryInfo(
+                      "Pickup - ",
+                      "Kathmandu Durbar Square - 1.2 km for from you ",
+                      "Green Valley Coconut Store",
+                  ),
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                      Icons.location_on_outlined,
+                      color: buttonMainColor,
+                      size: 22
+                  ),
+                  SizedBox(width: 5,),
+                  pickupAndDileveryInfo(
+                    "Delivery - ",
+                    "Patan , Durbar Square - 3.5 km from the pickup location",
+                    " John Doe",
+                  ),
+                ],
+              ),
+              SizedBox(height: 15,),
+
+              SizedBox(
+                width: double.maxFinite,
+                child: CustomButton(title: "View order details", onPressed: (){
+                  //Navigator.push(context, route);
+                }),
               )
             ],
           ),
@@ -87,5 +148,33 @@ class OrderCard extends StatelessWidget {
         ],
       ),
     );
+  }
+  Expanded pickupAndDileveryInfo(title, address, subtitle){
+    return Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                    flex: 3,
+                    child: Text(
+                      title, maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(
+                        fontWeight: FontWeight.bold,fontSize: 15),
+                    ),
+                ),
+                Expanded(
+                  flex: 9,
+                  child: Text(
+                    address, maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(
+                      fontWeight: FontWeight.w500,fontSize: 15),
+                  ),
+                ),
+
+              ],
+            ),
+            Text(subtitle,style: TextStyle(color: Colors.black38),)
+          ],
+        ));
   }
 }

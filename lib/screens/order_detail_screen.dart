@@ -1,5 +1,6 @@
 
 import 'package:delivery_boy_app/utills/colors.dart';
+import 'package:delivery_boy_app/widgets/dash_vertical.dart';
 import 'package:flutter/material.dart';
 
 class OrderDetailScreen extends StatelessWidget {
@@ -105,6 +106,45 @@ class OrderDetailScreen extends StatelessWidget {
 
                   ],)
 
+                ],
+              ),
+              ),
+            ),
+            SizedBox(height: 12,),
+            //Pick up and delivery location
+            Material(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              child: Padding(
+                padding: EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Column(
+                        children: [
+                          Icon(Icons.radio_button_checked,
+                          color: Colors.black26,
+                            size: 20,
+                          ),
+                          SizedBox(height: 80,
+                          child: DashVerticalLine(
+                            dashHeight: 5,
+                            dashGap: 5,
+                          ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 12,),
+                      Expanded(child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(""),
+                        ],
+                      ))
+                    ],
+                  )
                 ],
               ),
               ),

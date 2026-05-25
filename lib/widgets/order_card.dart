@@ -1,5 +1,6 @@
 
 
+import 'package:delivery_boy_app/screens/order_detail_screen.dart';
 import 'package:delivery_boy_app/utills/colors.dart';
 import 'package:delivery_boy_app/widgets/custom_button.dart';
 import 'package:delivery_boy_app/widgets/dash_vertical.dart';
@@ -139,7 +140,7 @@ class OrderCard extends StatelessWidget {
               SizedBox(
                 width: double.maxFinite,
                 child: CustomButton(title: "View order details", onPressed: (){
-                  //Navigator.push(context, route);
+                  Navigator.push(context, OrderDetailScreen() as Route<Object?>);
                 }),
               )
             ],

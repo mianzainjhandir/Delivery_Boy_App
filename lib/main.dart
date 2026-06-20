@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => CurrentLocationProvider()),
       ],
-      child: MaterialApp(
+      child: GetMaterialApp(
         title: 'Delivery Boy App',
         debugShowCheckedModeBanner: false,
         home: SplashScreen(),

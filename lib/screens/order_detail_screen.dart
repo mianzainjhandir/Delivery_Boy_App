@@ -1,7 +1,11 @@
 
 import 'package:delivery_boy_app/utills/colors.dart';
+import 'package:delivery_boy_app/widgets/custom_button.dart';
 import 'package:delivery_boy_app/widgets/dash_vertical.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
+
+import 'package:provider/provider.dart';
 
 class OrderDetailScreen extends StatelessWidget {
   const OrderDetailScreen({super.key});
@@ -11,7 +15,7 @@ class OrderDetailScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         elevation: 0,
           title: Text("Order Detail"),
         centerTitle: false,
@@ -98,11 +102,16 @@ class OrderDetailScreen extends StatelessWidget {
                   Row(children: [
                     Icon(Icons.credit_card_outlined),
                     SizedBox(width: 10,),
-                    Text("₹ 320",style: TextStyle(
+                    Text("₹320",style: TextStyle(
                       fontSize: 16,
                       color: iconColor,
                       fontWeight: FontWeight.w600
                     ),),
+                    SizedBox(width: 10,), Icon(Icons.check_circle_sharp, color: iconColor,),SizedBox(width: 10,),
+                    Text("Paid",style: TextStyle(
+                      color: iconColor,
+                      fontWeight: FontWeight.w600
+                    ),)
 
                   ],)
 
@@ -140,9 +149,64 @@ class OrderDetailScreen extends StatelessWidget {
                       Expanded(child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(""),
+                          Text("PickUp Location", style: TextStyle(color: Colors.black26,fontWeight: FontWeight.w600,fontSize: 16),),
+                          SizedBox(height: 2,),
+                          Text("Cathmandu Darbar Square",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 16),),
+                          SizedBox(height: 2,),
+                          Text("Green Velly Coconut *145826522",style: TextStyle(color: Colors.grey,fontWeight: FontWeight.w600,fontSize: 16),),
                         ],
-                      ))
+                      )
+                      ),
+                      CircleAvatar(
+                        radius: 18,
+                        backgroundColor: iconColor,
+                        child: Icon(Icons.phone,color: Colors.white,size: 18,),
+                      ),
+                      SizedBox(width: 20,),
+                      CircleAvatar(
+                        radius: 18,
+                        backgroundColor: Colors.red.shade50,
+                        child: Transform.rotate(angle:  -pi / 4,child: Icon(Icons.send,size: 18,color: buttonMainColor,),),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 12,),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.location_on_outlined,
+                        color: buttonMainColor,
+                        size: 22,
+                      ),
+                      SizedBox(width: 12,),
+                      Expanded(child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Delivery Location",style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                          ),),
+                          SizedBox(height: 2,),
+                          Text("Patan Durbar Square,\n 11000, Nepal",style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                            color: Colors.black
+                          ),),
+                          SizedBox(height: 2,),
+                          Text("John Doe ",style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey
+                          ),),
+
+                        ],
+                      )),
+                      CircleAvatar(
+                        radius: 18,
+                        backgroundColor: Colors.red.shade50,
+                        child: Transform.rotate(angle:  -pi / 4,child: Icon(Icons.send,size: 18,color: buttonMainColor,),)
+
+                      )
                     ],
                   )
                 ],
@@ -152,7 +216,30 @@ class OrderDetailScreen extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: Consumer(builder: (context, provider, child){
+        return Container(
+          color: Colors.white,
+          child: Padding(padding: EdgeInsets.symmetric(horizontal: 20,vertical: 30),child: Row(
+            children: [
+              Expanded(
+                  child: CustomButton(
+                    color: declineOrder,
+                    textColor: Colors.black54,
+                    title: "Decline Order", onPressed: (){},
+              )
+              ),
+              SizedBox(width: 10,),
+              Expanded(
+                  child: CustomButton(
+                    title: "Accept Order ", onPressed: (){},
+                  )
+              ),
+            ],
+          ),),
+        );
+      }),
     );
 
   }
 }
+

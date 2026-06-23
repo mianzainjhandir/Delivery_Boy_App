@@ -1,4 +1,5 @@
 import 'package:delivery_boy_app/provider/current_location_provider.dart';
+import 'package:delivery_boy_app/provider/delivery_provider.dart';
 import 'package:delivery_boy_app/screens/app_main_screen.dart';
 import 'package:delivery_boy_app/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CurrentLocationProvider()),
+        ChangeNotifierProvider(create: (_) => DeliveryProvider())
       ],
       child: GetMaterialApp(
         title: 'Delivery Boy App',

@@ -1,4 +1,5 @@
 
+import 'package:delivery_boy_app/provider/delivery_provider.dart';
 import 'package:delivery_boy_app/utills/colors.dart';
 import 'package:delivery_boy_app/widgets/custom_button.dart';
 import 'package:delivery_boy_app/widgets/dash_vertical.dart';
@@ -216,22 +217,46 @@ class OrderDetailScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: Consumer(builder: (context, provider, child){
+      bottomNavigationBar: Consumer<DeliveryProvider>(
+          builder: (context, provider, child){
         return Container(
           color: Colors.white,
-          child: Padding(padding: EdgeInsets.symmetric(horizontal: 20,vertical: 30),child: Row(
+          child: Padding(padding: EdgeInsets.symmetric(horizontal: 20,vertical: 30),
+            child:
+            provider.status == DeliveryStatus.orderAccepted ? CustomButton(title: "Start Pickup", onPressed: (){
+              context.read<DeliveryProvider>().startPickup();
+            })
+            : Row(
             children: [
               Expanded(
                   child: CustomButton(
                     color: declineOrder,
                     textColor: Colors.black54,
-                    title: "Decline Order", onPressed: (){},
+                    title: "Decline Order", onPressed: (){
+                    context.read<DeliveryProvider>().rejectOrder();
+                    Navigator.pop(context);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Order is not accepted"),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  },
               )
               ),
               SizedBox(width: 10,),
               Expanded(
                   child: CustomButton(
-                    title: "Accept Order ", onPressed: (){},
+                    title: "Accept Order ", onPressed: (){
+                      context.read<DeliveryProvider>().acceptOrder();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Order is accepted"),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                  },
                   )
               ),
             ],

@@ -1,5 +1,6 @@
 //Delivery Provider Screen
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -22,9 +23,9 @@ class DeliveryProvider extends ChangeNotifier {
   DeliveryStatus _status = DeliveryStatus.waitingForAcceptance;
   OrderModel? _currentOrder;
   List<LatLng> _routePoints = [];
-  int currentStep = 0;
+  int _currentStep = 0;
   LatLng? _currentDeliveryBoyPosition;
-  Timer? animationTimer;
+  Timer? _animationTimer;
   final Set<Polyline> _polylines = {};
   final Set<Marker> _markers = {};
 
@@ -105,36 +106,138 @@ class DeliveryProvider extends ChangeNotifier {
 
       // mark order as picked up and star delivery animation
       void markAsPickedUp() {
-
+      _status = DeliveryStatus.enRoute;
+      _startDeliverySimulation();
       }
 
       // stop animation when destination is reached
-      void markDestinationReached() {}
+      void markDestinationReached() {
+      _status = DeliveryStatus.destinationReached;
+      _stopAnimation();
+      notifyListeners();
+      }
 
       // mark order as being delivered
-      void markAdDelivered() {}
+      void markAdDelivered() {
+      _status = DeliveryStatus.markingAsDelivered;
+      notifyListeners();
+      }
 
      // complete the delivery process
-     void completeDelivery() {}
+     void completeDelivery() {
+      _status = DeliveryStatus.delivered;
+      notifyListeners();
+     }
 
     // setup route points from pre-calculated data
-     void _generateRoutePoints() {}
+     void _generateRoutePoints() {
+      _routePoints = _perCalculatedRoute;
+      _currentDeliveryBoyPosition = _routePoints[0];
+      _currentStep = 0;
+     }
 
     // create polyline and marks for google maps
-    void _setupMapOverlays() {}
+    void _setupMapOverlays() {
+      _polylines.add(
+        Polyline(polylineId: PolylineId("deliveryRoute"),
+        points: routePoints,
+          color: Colors.blue,
+          width: 5,
+
+        )
+      );
+
+      // Add green marker for pickup location
+      _markers.add(
+        Marker(markerId: MarkerId("pickUp"),
+        position: _currentOrder!.pickupLocation,
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+          infoWindow: InfoWindow(title: "Pickup Location"),
+        )
+      );
+      // Add red marker for delivery location
+      _markers.add(
+          Marker(markerId: MarkerId("delivery"),
+            position: _currentOrder!.deliveryLocation,
+            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+            infoWindow: InfoWindow(title: "Delivery Location"),
+          )
+      );
+      _updateDeliveryBoyMarker();
+    }
 
      //Update or create delivery boy markers with current position
-    void _updateDeliveryBoyMarker() {}
+    void _updateDeliveryBoyMarker() {
+      _markers.removeWhere((m) => m.markerId.value == "deliveryBoy");
+      if(_currentDeliveryBoyPosition != null){
+        _markers.add(
+            Marker(markerId: MarkerId("deliveryBoy"),
+              position: _currentDeliveryBoyPosition!,
+              icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+              rotation: _calculateBearing(),
+              infoWindow: InfoWindow(title: "Delivery Partner"),
+            )
+        );
 
+      }
+    }
+  // Calculate bearing between two LatLng points to rotate the delivery
+     double _calculateBearing(){
+      // Return 0 if start or no route points
+       if(_currentStep == 0 || _routePoints.isEmpty) return 0;
+       // Get previous and current points
+       LatLng previousPoint = _routePoints[_currentStep -1];
+        LatLng currentPoint = _routePoints[_currentStep];
+        // Convert to raduans for calculation
+       double lat1 = previousPoint.latitude * pi / 180;
+       double lon1 = previousPoint.longitude * pi / 180;
+        double lat2 = currentPoint.latitude * pi / 180;
+        double lon2 = currentPoint.longitude * pi / 180;
 
+        double y = sin(lon2 - lon1) * cos(lat2);
+        double x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(lon2 - lon1);
+
+        return( atan2(y, x) * 180 / pi + 360) % 360;
+     }
+     // Start animated movement along the route
+     void _startDeliverySimulation(){
+      const duration = Duration(milliseconds: 300);
+      _animationTimer = Timer.periodic(duration, (timer){
+        if(_currentStep < _routePoints.length -1){
+          _currentStep++;
+          _currentDeliveryBoyPosition = _routePoints[_currentStep];
+          _updateDeliveryBoyMarker();
+          notifyListeners();
+        } else {
+          _stopAnimation();
+          _DestinationReached();
+        }
+      });
+     }
     // handle when animation reached destination
-    void _DestinationReached() {}
+    void _DestinationReached() {
+      _status = DeliveryStatus.destinationReached;
+      notifyListeners();
+    }
 
     // stop the movement animation timer
-    void _stopAnimation() {}
+    void _stopAnimation() {
+      _animationTimer?.cancel();
+      _animationTimer = null;
+    }
 
     // reset all delivery data to initial state
-    void reseDelivery() {}
+    void reuseDelivery() {
+      _stopAnimation();
+      _status = DeliveryStatus.waitingForAcceptance;
+      _routePoints = [];
+      _polylines.clear();
+      _markers.clear();
+      _currentStep = 0;
+      _currentDeliveryBoyPosition = null;
+      initializeOrder();
+      notifyListeners();
+    }
 
    // clean up resources when provider is disposed
    @override

@@ -25,7 +25,21 @@ class _DeliveryMapScreenState extends State<DeliveryMapScreen> {
             // Google Map
             _buildGoogleMap(provider),
             // Order Status Widget layer - show delivery progress and action buttons
+            Consumer<DeliveryProvider>(builder: (context, provider, child){
+              if(provider.currentOrder == null) return SizedBox();
 
+              // Show Order on the way status widget when order is accepted
+              if(provider.status == DeliveryStatus.rejected){
+                return SizedBox();
+              }
+              return Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(padding: EdgeInsets.all(1)
+
+                ),
+              );
+            }
+            )
 
           ],
         );

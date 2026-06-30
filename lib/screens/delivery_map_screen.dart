@@ -1,4 +1,5 @@
 import 'package:delivery_boy_app/provider/delivery_provider.dart';
+import 'package:delivery_boy_app/utills/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +22,10 @@ class _DeliveryMapScreenState extends State<DeliveryMapScreen> {
           builder: (context, provider, child){
         return Stack(
           children: [
+            // Google Map
+            _buildGoogleMap(provider),
+            // Order Status Widget layer - show delivery progress and action buttons
+
 
           ],
         );
@@ -30,7 +35,16 @@ class _DeliveryMapScreenState extends State<DeliveryMapScreen> {
 
   //Build and configure the google map widget
   Widget _buildGoogleMap(DeliveryProvider provider){
-    return GoogleMap(initialCameraPosition: CameraPosition(target: LatLng(27.7033, 85.3206), zoom: 14),
+    return GoogleMap(
+      onMapCreated: (GoogleMapController controller){
+        _mapController = controller;
+        if(provider.currentOrder != null){
+          _moveToLocation(provider.currentOrder!.pickupLocation);
+        }
+      },
+      initialCameraPosition: CameraPosition(target: LatLng(27.7033, 85.3206), zoom: 14),
+     markers: _buildMarkers(provider),
+     polylines: _buildPolylines(provider),
      zoomControlsEnabled: false,
       myLocationButtonEnabled: false,
 
@@ -65,9 +79,30 @@ class _DeliveryMapScreenState extends State<DeliveryMapScreen> {
               infoWindow: InfoWindow(title: "Delivery Boy"),
             )
         );
+        // move camera to follow delivery boy
+        _moveToLocation(provider.currentDeliveryBoyPosition!);
       }
     }
+    return markers;
   }
+  // Create route line to show my path between locations
+  Set <Polyline> _buildPolylines(DeliveryProvider provider){
+    Set<Polyline> polylines = {};
+
+    //  show polyline when order is accepted
+    if(provider.routePoints.isEmpty && provider.status != DeliveryStatus.waitingForAcceptance && provider.status != DeliveryStatus.rejected){
+      polylines.add(
+        Polyline(
+          polylineId: PolylineId("route"),
+          points: provider.routePoints,
+          color: buttonMainColor,
+          width: 6,
+        )
+      );
+    }
+    return polylines;
+  }
+
 
   void _moveToLocation(LatLng location){
     _mapController?.animateCamera(CameraUpdate.newLatLngZoom(location, 14));

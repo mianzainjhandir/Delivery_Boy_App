@@ -3,9 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
-class DeliveryMapScreen extends StatelessWidget {
+class DeliveryMapScreen extends StatefulWidget {
   const DeliveryMapScreen({super.key});
 
+  @override
+  State<DeliveryMapScreen> createState() => _DeliveryMapScreenState();
+}
+
+class _DeliveryMapScreenState extends State<DeliveryMapScreen> {
+
+  GoogleMapController? _mapController;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,6 +27,7 @@ class DeliveryMapScreen extends StatelessWidget {
       }),
     );
   }
+
   //Build and configure the google map widget
   Widget _buildGoogleMap(DeliveryProvider provider){
     return GoogleMap(initialCameraPosition: CameraPosition(target: LatLng(27.7033, 85.3206), zoom: 14),
@@ -28,6 +36,40 @@ class DeliveryMapScreen extends StatelessWidget {
 
     );
   }
-  //Create Map Markers for pickup delivery and drop locations....
 
+  //Create Map Markers for pickup delivery and drop locations....
+  Set<Marker> _buildMarkers(DeliveryProvider provider){
+    Set<Marker> markers = {};
+
+    if(provider.currentOrder != null){
+      markers.add(
+          Marker(markerId: MarkerId("pickUp"),
+            position: provider.currentOrder!.pickupLocation ?? LatLng(0.0, 0.0),
+            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+            infoWindow: InfoWindow(title: "Pickup Location"),
+          )
+      );
+      markers.add(
+          Marker(markerId: MarkerId("delivery"),
+            position: provider.currentOrder!.deliveryLocation?? LatLng(0.0, 0.0),
+            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+            infoWindow: InfoWindow(title: "Delivery Location"),
+          )
+      );
+      //delivery boy markers when moving
+      if(provider.currentDeliveryBoyPosition != null){
+        markers.add(
+            Marker(markerId: MarkerId("delivery"),
+              position: provider.currentDeliveryBoyPosition ?? LatLng(0.0, 0.0),
+              icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+              infoWindow: InfoWindow(title: "Delivery Boy"),
+            )
+        );
+      }
+    }
+  }
+
+  void _moveToLocation(LatLng location){
+    _mapController?.animateCamera(CameraUpdate.newLatLngZoom(location, 14));
+  }
 }

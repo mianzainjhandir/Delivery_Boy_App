@@ -77,7 +77,7 @@ class OrderCard extends StatelessWidget {
                         color: Colors.brown[100],
                         borderRadius: BorderRadius.circular(8),
                         image: DecorationImage(
-                            image: NetworkImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRY1yjOaz-ncmlmm6Dqr1jg45dlJ4rbwut66Q&s'),
+                            image: NetworkImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRetJt-ae04LIiGZOM4NCmPudE5V4XVrJN6ypI9WdKMGzPMHGdXSq7WsBg&s=10'),
                         ),
                       ),
                     ),

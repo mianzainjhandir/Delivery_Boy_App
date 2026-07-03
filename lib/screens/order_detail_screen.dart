@@ -79,7 +79,7 @@ class OrderDetailScreen extends StatelessWidget {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
-                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRY1yjOaz-ncmlmm6Dqr1jg45dlJ4rbwut66Q&s"
+                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRetJt-ae04LIiGZOM4NCmPudE5V4XVrJN6ypI9WdKMGzPMHGdXSq7WsBg&s=10"
                         ,height: 50,width: 50,
                         fit: BoxFit.cover,
                         ),

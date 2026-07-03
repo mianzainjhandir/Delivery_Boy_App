@@ -46,6 +46,8 @@ class OrderOnTheWay extends StatelessWidget {
             ),
           )
         ],
+        // Delivery location row with icon text and phone icon
+
     ),
     );
   }

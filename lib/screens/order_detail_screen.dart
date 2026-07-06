@@ -8,6 +8,8 @@ import 'dart:math';
 
 import 'package:provider/provider.dart';
 
+import 'delivery_map_screen.dart';
+
 class OrderDetailScreen extends StatelessWidget {
   const OrderDetailScreen({super.key});
 
@@ -225,6 +227,7 @@ class OrderDetailScreen extends StatelessWidget {
             child:
             provider.status == DeliveryStatus.orderAccepted ? CustomButton(title: "Start Pickup", onPressed: (){
               context.read<DeliveryProvider>().startPickup();
+              //NavigationHelper.pushReplacement(context, DeliveryMapScreen());
             })
             : Row(
             children: [

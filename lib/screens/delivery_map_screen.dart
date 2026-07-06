@@ -21,6 +21,11 @@ class DeliveryMapScreen extends StatefulWidget {
 class _DeliveryMapScreenState extends State<DeliveryMapScreen> {
 
   GoogleMapController? _mapController;
+
+  @override
+  void initState(){
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

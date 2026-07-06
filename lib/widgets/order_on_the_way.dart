@@ -71,12 +71,36 @@ class OrderOnTheWay extends StatelessWidget {
       case DeliveryStatus.destinationReached:
         return Padding(padding: EdgeInsets.symmetric(horizontal: 18),
         child: GestureDetector(
-          onTap: ,
+          onTap: _isButtonEnabled() ? (onButtonPressed ?? (){}) : (){},
+          child: Row(
+            children: [
+              Expanded(child: Container(
+
+              ))
+            ],
+          ),
         ),
         );
     }
   }
+// return button color on based on delivery status
+  Color _getButtonColor() {
+    switch(status) {
 
+      case DeliveryStatus.pickingUp:
+        return pickedUpColor;
+      case DeliveryStatus.enRoute:
+        return Colors.orange.withAlpha(150);
+      case DeliveryStatus.destinationReached:
+        return pickedUpColor;
+      case DeliveryStatus.markingAsDelivered:
+        return buttonMainColor;
+      case DeliveryStatus.delivered:
+        return Colors.red.withAlpha(150);
+      default:
+        return buttonMainColor;
+    }
+  }
 
   String _getButtonTitle() {
     switch(status) {

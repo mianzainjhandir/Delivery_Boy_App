@@ -1,8 +1,15 @@
 import 'package:delivery_boy_app/provider/delivery_provider.dart';
+import 'package:delivery_boy_app/screens/app_main_screen.dart';
+import 'package:delivery_boy_app/screens/driver_home_screen.dart';
 import 'package:delivery_boy_app/utills/colors.dart';
+import 'package:delivery_boy_app/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+
+import '../widgets/order_on_the_way.dart';
 
 class DeliveryMapScreen extends StatefulWidget {
   const DeliveryMapScreen({super.key});
@@ -34,17 +41,80 @@ class _DeliveryMapScreenState extends State<DeliveryMapScreen> {
               }
               return Align(
                 alignment: Alignment.bottomCenter,
-                child: Padding(padding: EdgeInsets.all(1)
+                child: Padding(padding: EdgeInsets.all(1),
+                  child: OrderOnTheWay(
+                    order: provider.currentOrder!,
+                    status: provider.status,
+                    onButtonPressed: (){
+                      switch(provider.status){
+                        case DeliveryStatus.pickingUp:
+                          provider.markAsPickedUp();
+                          break;
+                        case DeliveryStatus.destinationReached:
+                          provider.markAdDelivered();
+                          break;
+                        case DeliveryStatus.markingAsDelivered:
+                          provider.completeDelivery();
+                          break;
+                        default:
+                          break;
+                      }
+                    },
+                  )
 
                 ),
               );
             }
-            )
-
+            ),
+            if(provider.status == DeliveryStatus.delivered)
+              _buildDeliveryCompletedCard(provider),
           ],
         );
       }),
     );
+  }
+
+  Widget _buildDeliveryCompletedCard(DeliveryProvider provider){
+
+    return Positioned.fill(child: Container(
+      color: Colors.black,
+      child: Center(
+        child: Container(
+          margin: EdgeInsets.all(15),
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 100,height: 100,
+                decoration: BoxDecoration(
+                  image: DecorationImage(image: NetworkImage("https://lottie.host/embed/6b4aed77-c973-4407-96f9-bd4fa7b34b71/sk8ujN4FKc.json"))
+                ),
+              ),
+              SizedBox(height: 20,),
+              Text("Delivery Completed",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+              SizedBox(height: 10,),
+              Text("Thank you for completing the delivery. You can now go back to the home screen",textAlign: TextAlign.center,style: TextStyle(color: Colors.grey,fontSize: 14),),
+              SizedBox(height: 20,),
+              SizedBox(
+                width: double.infinity,
+                child: CustomButton(title: "Go Home", onPressed: (){
+                  Get.to (() => DriverHomeScreen());
+                  provider.reuseDelivery();
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> AppMainScreen()),
+                          (route) => false
+                  );
+                }),
+              )
+            ],
+          ),
+        ),
+      ),
+    ));
   }
 
   //Build and configure the google map widget

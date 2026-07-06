@@ -1,5 +1,6 @@
 
 import 'package:delivery_boy_app/utills/colors.dart';
+import 'package:delivery_boy_app/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
 import '../model/order.dart';
@@ -58,7 +59,7 @@ class OrderOnTheWay extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.all(20),
-            child: SizedBox(width: double.maxFinite,child: ,),
+            child: SizedBox(width: double.maxFinite,child: _buttonStyle()),
           )
         ],
     ),
@@ -75,12 +76,28 @@ class OrderOnTheWay extends StatelessWidget {
           child: Row(
             children: [
               Expanded(child: Container(
-
+                padding: EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  color: pickedUpColor.withAlpha(170),
+                  borderRadius: BorderRadius.horizontal(left: Radius.circular(30),),
+                ),
+                child: Icon(Icons .arrow_forward,color: Colors.white,),
+              )),
+              Expanded(child: Container(
+                padding: EdgeInsets.symmetric(vertical: 11),
+                decoration: BoxDecoration(
+                  color: _getButtonColor(),
+                  borderRadius: BorderRadius.horizontal(right: Radius.circular(30),),
+                ),
+                child: Center(child: Text(_getButtonTitle(),style: TextStyle(color: Colors.white, fontSize: 16,fontWeight: FontWeight.w600),),),
               ))
             ],
           ),
         ),
         );
+      default:
+        return CustomButton(title: _getButtonTitle(), onPressed: _isButtonEnabled() ? (onButtonPressed ?? (){}) : (){},
+          color: _getButtonColor(),);
     }
   }
 // return button color on based on delivery status

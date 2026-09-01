@@ -34,7 +34,7 @@ class DeliveryProvider extends ChangeNotifier {
   DeliveryStatus get status => _status;
   OrderModel? get currentOrder => _currentOrder;
   List<LatLng> get routePoints => _routePoints;
-  LatLng? get currentDeliveryBoyPosition => currentDeliveryBoyPosition;
+  LatLng? get currentDeliveryBoyPosition => _currentDeliveryBoyPosition;
   Set<Polyline> get polylines => _polylines;
   Set<Marker> get markers => _markers;
 
@@ -210,12 +210,12 @@ class DeliveryProvider extends ChangeNotifier {
           notifyListeners();
         } else {
           _stopAnimation();
-          _DestinationReached();
+          _destinationReached();
         }
       });
      }
     // handle when animation reached destination
-    void _DestinationReached() {
+    void _destinationReached() {
       _status = DeliveryStatus.destinationReached;
       notifyListeners();
     }

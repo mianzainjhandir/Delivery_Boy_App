@@ -23,7 +23,7 @@ class _AppMainScreenState extends State<AppMainScreen> {
 
 
   int _currentIndex = 0;
-  final List<IconData> _icons = [
+  final List<FaIconData> _icons = [
     FontAwesomeIcons.house,
     FontAwesomeIcons.boxOpen,
     FontAwesomeIcons.truckFast,
@@ -70,7 +70,7 @@ class _AppMainScreenState extends State<AppMainScreen> {
                           color: buttonSecondaryColor,
                           borderRadius: BorderRadius.circular(15),
                       ) : null,
-                      child: Icon(
+                      child: FaIcon(
                         _icons[index],
                         size: 18,
                         color: isSelected ? buttonMainColor : Colors.black,
